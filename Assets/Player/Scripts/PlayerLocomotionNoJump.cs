@@ -1,8 +1,9 @@
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerLocomotion : MonoBehaviour
+public class PlayerLocomotionNoJump : MonoBehaviour
 {
     CharacterController characterController;
     Transform playerContainer, cameraContainer;
@@ -35,7 +36,6 @@ public class PlayerLocomotion : MonoBehaviour
         var map = playerInput.currentActionMap;
 
         moveAction = map.FindAction("Move", true);
-        jumpAction = map.FindAction("Jump", true);
         sprintAction = map.FindAction("Sprint", true);
         crouchAction = map.FindAction("Crouch", true);
         lookAction = map.FindAction("Look", true);
@@ -60,24 +60,17 @@ public class PlayerLocomotion : MonoBehaviour
         {
             Locomotion();
             RotateAndLook();
-            PerspectiveCheck();
-            SwapWeapon();
+   
         }
     }
 
     void SetCurrentCamera()
     {
-        SwitchPerspective switchPerspective = GetComponent<SwitchPerspective>();
-        if (switchPerspective.GetPerspective() == SwitchPerspective.Perspective.First)
-        {
-            playerContainer = gameObject.transform.Find("Container1P");
-            cameraContainer = playerContainer.transform.Find("Camera1PContainer");
-        }
-        else
-        {
+
+        
             playerContainer = gameObject.transform.Find("Container3P");
             cameraContainer = playerContainer.transform.Find("Camera3PContainer");
-        }
+        
 
     }
 
@@ -90,12 +83,6 @@ public class PlayerLocomotion : MonoBehaviour
             moveDirection = new Vector3(move.x, 0f, move.y);
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= speed;
-            if (jumpAction.IsPressed())
-            {
-                
-                moveDirection.y = jumpSpeed;
-                
-            }
             if (sprintAction.IsPressed())
             {
                 moveDirection.x *= sprintSpeed;
@@ -149,47 +136,7 @@ public class PlayerLocomotion : MonoBehaviour
         cameraContainer.transform.localRotation = Quaternion.Euler(rotateY, 0f, 0f);
     }
 
-    void PerspectiveCheck()
-    {
-        if (previousAction.WasPressedThisFrame())
-        {
-            SwitchPerspective switchPerspective = GetComponent<SwitchPerspective>();
+    
 
-            if (switchPerspective != null)
-            {
-                if (switchPerspective.GetPerspective() == SwitchPerspective.Perspective.First)
-                {
-                    switchPerspective.SetPerspective(SwitchPerspective.Perspective.Third);
-                }
-                else
-                {
-                    switchPerspective.SetPerspective(SwitchPerspective.Perspective.First);
-                }
-
-                SetCurrentCamera();
-            }
-        }
-    }
-
-    void SwapWeapon()
-    {
-        if (nextAction.WasPressedThisFrame())
-        { 
-            SwitchWeapon switchWeapon = GetComponent<SwitchWeapon>();
-
-            if (switchWeapon != null)
-            {
-                if (switchWeapon.GetWeapon() == SwitchWeapon.Weapon.Gun)
-                {
-                    switchWeapon.SetWeapon(SwitchWeapon.Weapon.Bow);
-                    gameObject.GetComponent<PlayerGunAttack>().enabled = false;
-                }
-                else
-                {
-                    switchWeapon.SetWeapon(SwitchWeapon.Weapon.Gun);
-                    gameObject.GetComponent<PlayerBowAttack>().enabled = false;
-                }
-            }
-        }
-    }
+    
 }
