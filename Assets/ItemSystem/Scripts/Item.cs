@@ -39,8 +39,14 @@ public class Item : MonoBehaviour
     [SerializeField]
     bool isHealsPlayer = false;
 
+    [SerializeField]
+    bool isWeapon = false;
+
     [SerializeField] 
     int pointValue = 1;
+
+    public GameObject PlayerObject;
+    PlayerGunAttack playerGun;
 
     private void Start()
     {
@@ -59,6 +65,10 @@ public class Item : MonoBehaviour
                 if (isHealsPlayer)
                 {
                     Heal(collider);
+                }
+                else if (isWeapon)
+                {
+                    Weapon();
                 }
                 else
                 {
@@ -112,6 +122,13 @@ public class Item : MonoBehaviour
     void Heal(Collider collider)
     {
         collider.SendMessageUpwards("Heal", HealthUp, SendMessageOptions.DontRequireReceiver);
+        Destroy(gameObject);
+    }
+
+    void Weapon()
+    {
+        playerGun = PlayerObject.GetComponent<PlayerGunAttack>();
+        playerGun.enabled = true;
         Destroy(gameObject);
     }
 }
