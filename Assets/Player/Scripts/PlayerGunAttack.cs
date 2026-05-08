@@ -136,4 +136,10 @@ public class PlayerGunAttack : MonoBehaviour
         canShoot = true;
         Debug.Log("Reloaded!");
     }
+    void MagUp(int magPick)
+    {
+        mag += magPick;
+        magAmmoText.text = mag.ToString();
+        Debug.Log("Picked up: " + mag.ToString());
+    }
 }

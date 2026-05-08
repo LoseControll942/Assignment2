@@ -29,6 +29,9 @@ public class Item : MonoBehaviour
     float HealthUp = 50f;
 
     [SerializeField]
+    int MagAmount = 1;
+
+    [SerializeField]
     bool isStorable = false; // if false, item will be used on pickup
     [SerializeField]
     bool isConsumable = true; // if true, item will be destroyed (or quantity reduced) when used
@@ -41,6 +44,9 @@ public class Item : MonoBehaviour
 
     [SerializeField]
     bool isWeapon = false;
+
+    [SerializeField]
+    bool isMag = false;
 
     [SerializeField] 
     int pointValue = 1;
@@ -69,6 +75,10 @@ public class Item : MonoBehaviour
                 else if (isWeapon)
                 {
                     Weapon();
+                }
+                else if (isMag)
+                {
+                    Mag(collider);
                 }
                 else
                 {
@@ -129,6 +139,12 @@ public class Item : MonoBehaviour
     {
         playerGun = PlayerObject.GetComponent<PlayerGunAttack>();
         playerGun.enabled = true;
+        Destroy(gameObject);
+    }
+
+    void Mag(Collider collider)
+    {
+        collider.SendMessageUpwards("MagUp", MagAmount, SendMessageOptions.DontRequireReceiver);
         Destroy(gameObject);
     }
 }
